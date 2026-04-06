@@ -5,11 +5,11 @@ import os
 
 # Telegram Bot Token
 # Get from @BotFather on Telegram
-BOT_TOKEN = os.getenv("BOT_TOKEN", "YOUR_BOT_TOKEN_HERE")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "8430973350:AAEXic7IkF0hNihCYDLQiCsaUkPYMfN1tuU")
 
 # Admin Telegram IDs (for admin commands)
 # Get from @userinfobot
-admin_ids_str = os.getenv("ADMIN_IDS", "123456789")
+admin_ids_str = os.getenv("ADMIN_IDS", "8627624927")
 ADMIN_IDS = [int(id.strip()) for id in admin_ids_str.split(",") if id.strip()]
 
 # Bot Info
