@@ -5,6 +5,54 @@ NO Paid SMM Panels Required!
 Uses: TikTok-Api (GitHub) + SociaVault (50 free) + ScrapeCreators
 """
 
+# ========== HEALTH SERVER (RAILWAY KE LIYE) ==========
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import threading
+import socket
+
+class HealthHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/plain')
+        self.end_headers()
+        self.wfile.write(b'Bot is running!')
+    
+    def log_message(self, format, *args):
+        pass  # Clean logs
+
+def find_free_port():
+    """Find a free port if PORT not set"""
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.bind(('0.0.0.0', 0))
+    port = sock.getsockname()[1]
+    sock.close()
+    return port
+
+def start_health_server():
+    """Start health server in background"""
+    # Railway ka PORT use karo, nahi toh 8080 default
+    port = int(os.environ.get('PORT', 8080))
+    
+    try:
+        server = HTTPServer(('0.0.0.0', port), HealthHandler)
+        print(f"✅ Health server running on port {port}")
+        server.serve_forever()
+    except OSError as e:
+        # Agar port busy hai, toh alag port try karo
+        if "Address already in use" in str(e):
+            alt_port = find_free_port()
+            server = HTTPServer(('0.0.0.0', alt_port), HealthHandler)
+            print(f"✅ Health server running on alternate port {alt_port}")
+            server.serve_forever()
+        else:
+            raise e
+
+# Health server ko daemon thread mein start karo
+health_thread = threading.Thread(target=start_health_server, daemon=True)
+health_thread.start()
+# ========== HEALTH SERVER END ==========
+
+
 import logging
 import asyncio
 import json
